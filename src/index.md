@@ -14,7 +14,9 @@ Para compreender como detectar linhas em uma imagem, é útil revisitar o concei
 
 ![](equacao-grau1.webp)
 
-Essa equação nos capacita a descrever qualquer linha em um plano cartesiano, o que se revela especialmente útil em imagens, já que uma imagem digital geralmente é representada por uma matriz, ou seja, um plano cartesiano, no qual cada pixel (ponto) possui coordenadas $x$ e $y$. Tá mas, por que isso é últil na Transformada de Hough?  E antes disso, no que consiste uma transformada? 
+Essa equação nos capacita a descrever qualquer linha em um plano cartesiano, o que se revela especialmente útil em imagens, já que uma imagem digital geralmente é representada por uma matriz, ou seja, um plano cartesiano, no qual cada pixel (ponto) possui coordenadas $x$ e $y$. 
+
+Tá mas, por que isso é últil na Transformada de Hough?  E antes disso, no que consiste uma transformada? 
 
 Uma transformada basicamente consiste em passar uma função matemática de um domínio para outro. De maneira mais simplória, **uma transformada é um jeito de olhar para as coisas de uma nova perspectiva**. Imagine que você tem uma função (como uma equação matemática) que descreve algo em um espaço, como pontos em uma imagem. Agora, aplicar uma transformada significa pegar essa função e mudar a forma como a representamos, levando-a para um novo espaço. Isso nos permite ver coisas que talvez não fossem óbvias na forma original.
 
@@ -46,8 +48,7 @@ Okay, espero que tenha ficado claro o que um representa no outro e vice-versa, m
 
 Se você é bastante atento, pode ter percebido que, a medida com que os pontos da imagem são transferidos para o domínio dos parâmetros, essas retas podem se cruzar, e é exatamente esse o pulo do gato! Pois **cruzamentos na transformada significam uma correspondência entre parâmetros que descrevem uma potêncial linha na imagem original.** Calma, respira, vou explicar...
 
-Quando duas linhas no domínio dos parâmetros se cruzam, isso implica matematicamente que os dois pontos correspondentes na imagem original estão conectados por uma linha com os parâmetros $m$ e $c$ que representam a coordenada do cruzamento no gráfico da transformada.
-Assim, quanto maior a quantidade de cruzamentos em um mesmo ponto ($m$, $c$), maior a quantidade de pontos na imagem original que estão na respectiva reta!
+Quando duas linhas no domínio dos parâmetros se cruzam, isso significa que os dois pontos correspondentes na imagem original estão conectados por uma linha com os parâmetros $m$ e $c$ os quais são a coordenada do cruzamento no gráfico da transformada.
 
 {red}(Se está difícil entender apenas lendo, dê uma olhada no carrossel seguinte. Tente reler e rever até ficar claro pra você.)
 
@@ -69,7 +70,7 @@ O caso de exemplo é um caso perfeito, onde todos os pontos estão alinhados, em
 
 Em uma imagem real, cada ponto pode estar potencialmente conectado a todos os outros por uma reta. Ás vezes a reta liga apenas dois pontos ou  pode ligar inúmeros deles. Tente pensar em como determinar ás retas mais relevantes de uma imagem analisando apenas o gráfico da transformada.
 
-**Dica:** Analise o gabarito do checkpoint anterior e busque uma maneira de justificar por que a reta amarela é a mais adequada para o conjunto de pontos da imagem. 
+**Dica:** Analise o gabarito do checkpoint anterior e busque uma maneira de justificar por que a reta amarela é a mais relevante para o conjunto de pontos da imagem. 
 
 **OBS:** Justifique com base no gráfico da transformada.
 
@@ -77,7 +78,7 @@ Em uma imagem real, cada ponto pode estar potencialmente conectado a todos os ou
 
 A maneira de determinar as retas mais relevantes é **analisar qual coordenada ($m$, $c$) obteve mais intersecções no domínio dos parâmetros**, pois, quanto maior a quantidade de cruzamentos em um mesmo ponto ($m$, $c$), maior a quantidade de pontos na imagem original que estão na respectiva reta.
 
-No caso do gabarito do checkpoint anterior, a reta amarela era a mais adequada para aquele conjunto de pontos pois, no gráfico da transformada, a intersecção no ponto amarelo foi feita por 4 retas, enquanto nos outros pontos apenas por duas.
+No caso do gabarito do checkpoint anterior, a reta amarela era a mais relevante para aquele conjunto de pontos pois, no gráfico da transformada, a intersecção no ponto amarelo foi feita por 4 retas, enquanto nos outros pontos apenas por duas.
 :::
 ???
 

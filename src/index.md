@@ -1,43 +1,56 @@
 # Transformada de Hough
 
-## O que é
+## O que é e como funciona?
 
-Imagine que você tem uma imagem e quer detectar linhas nela. Como você faria isso? Uma maneira de fazer isso é usar a Transformada de Hough. A Transformada de Hough é uma técnica usada principalmente em processamento de imagens para detectar formas, principalmente linhas, em uma imagem. Ela é especialmente útil quando queremos identificar padrões geométricos em uma imagem, como linhas retas, círculos ou elipses.
-
-Vamos supor que, após aplicar um filtro de detecção de bordas em uma imagem, assim como os que viram em Robótica Computacional, você tenha uma imagem como a de baixo.
-
-![](hough_input.png)
-
-A partir do método da transformada de Hough, é possível detectar as linhas presentes na imagem. O output da aplicação da transformada de Hough na imagem acima é a seguinte:
-
-![](hough_output.png)
-
-E a partir desse output pode-se traçar as linhas detectadas na imagem original.
-
-![](hough_output2.png)
-
-## Como Pode ser Utilizada na prática?
-
-A transformada de Hough é uma técnica muito poderosa e versátil. Anteriormente a matéria de Robótica Computacional foi mencionada, e a transformada de Hough é uma técnica muito utilizada em robótica, principalmente em robôs móveis. Ela é utilizada para detectar linhas em imagens de câmeras de robôs, o que é muito útil para a navegação autônoma de robôs móveis.
-
-??? Checkpoint
-Vamos supor que queremos desenvolver um carro autônomo. Que processo poderiamos utilizar para encontrar o caminho que o carro deve seguir numa pista? Desenhe um esboço de como você faria isso.
-
-::: Gabarito
-Uma possível solução seria segmentar as bordas da pista e, a partir disso, detectar as linhas presentes na imagem. A partir das linhas detectadas, poderíamos encontrar o ponto futuro que o carro deveria seguir para não sair do caminho.
+Imagine que você tem uma imagem e quer detectar linhas nela. Uma das maneiras de fazer isso é usando a Transformada de Hough. A Transformada de Hough é uma técnica usada principalmente em processamento de imagens para detectar formas geométricas, desde retas, circulos, elipses e outras diversas. Mas como ela funciona?
 
 <div style="display: flex; justify-content: space-between;">
-    <div style="width: 48%;">
+    <div style="width: 32.5%;">
+        <img src="hough-input.png" alt="Imagem 1">
+        <p style="display: flex; justify-content: center;">1. Input</p>
+    </div>
+    <div style="width: 32.5%;">
+        <img src="hough-output.png" alt="Imagem 2">
+        <p style="display: flex; justify-content: center;">2. Output</p>
+    </div>
+    <div style="width: 32.5%;">
+        <img src="hough-use.png" alt="Imagem 3">
+        <p style="display: flex; justify-content: center;">3. Uso</p>
+    </div>
+</div>
+
+1. A transformada recebe uma imagem com os contornos da imagem original (outro algorítimo é responsável por isso).
+
+2. Após o processamento, ela retorna os parâmetros das retas presentes na imagem original. Não se preocupe em entender o que esse gráfico de senóides signfica por agora, apenas entenda que os circulos vermelhos representam pontos, os quais as coordenadas são os parâmetros das retas na imagem original.
+
+3. Com os parâmetros fornecidos pela transformada, é possível visualizar as respectivas retas na imagem original.
+
+## Como pode ser utilizada na prática?
+
+Anteriormente, na matéria de Robótica Computacional, vocês aprenderam a controlar robôs de forma autônoma, e a Transformada de Hough é uma técnica bastante utilizada nesse contexto para ajudar na navegação de robôs.
+
+??? Checkpoint
+Vamos supor que queremos desenvolver um carro autônomo que deve percorrer uma estrada. Que processo poderia ser utilizado, utilizando a transformada de Hough, para encontrar a direção que o carro deve seguir?
+
+**Dica**: Imagine as retas que compõem a imagem.
+
+![](input-output/road.jpeg)
+
+::: Gabarito
+Uma possível solução seria segmentar as bordas da pista e, a partir disso, detectar as linhas presentes nessas bordas. A partir das linhas detectadas, poderíamos encontrar o ponto futuro em seus cruzamentos, ponto o qual dita a direção que o carro deve seguir para continuar na pista.
+
+<div style="display: flex; justify-content: space-between;">
+    <div style="width: 32.5%;">
         <img src="input-output/road.jpeg" alt="Imagem 1">
-        <p style="display: flex; justify-content: center;">Imagem original</p>
+        <p style="display: flex; justify-content: center;">1. Imagem original</p>
     </div>
-    <div style="width: 48%;">
+    <div style="width: 32.5%;">
         <img src="input-output/road-borders.png" alt="Imagem 2">
-        <p style="display: flex; justify-content: center;">Imagem com bordas detectadas</p>
+        <p style="display: flex; justify-content: center;">2. Bordas segmentadas</p>
     </div>
-    <div style="width: 48%;">
-        <img src="input-output/ponto_futuro.png" alt="Imagem 3">
-        <p style="display: flex; justify-content: center;">Ponto futuro detectado a partir das bordas</p>
+    <div style="width: 32.5%;">
+        <img src="input-output/road-lines.png" alt="Imagem 3">
+        <p style="display: flex; justify-content: center;">3. Linhas detectadas</p>
     </div>
 </div>
 
@@ -72,7 +85,7 @@ Um ponto do domínio das coordendas é representado por uma reta no domínio dos
 :::
 ???
 
-??? Checkpoint
+??? Checkpoint  
 Agora que vocẽ sabe que um ponto do domínio das coordendas é representado por uma reta no domínio dos parâmetros, tente entender o que essa reta significa no domínio das coordeandas. De novo, se possível desenhe.
 
 ::: Gabarito

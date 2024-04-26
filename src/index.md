@@ -173,6 +173,18 @@ Teoria do algorítmo (Pini)
 
 ## Complexidade (Todos - quinta)
 
+??? Checkpoint
+
+Levando o código montado anteriormente, tente analisar a complexidade do algorítmo. Pense em alto nível nesse primeiro momento, e depois tente analisar a complexidade de cada operação.
+
+::: Gabarito
+
+A complexidade do algorítmo é $O(n*m)$, onde $n$ é o número de pixels da imagem e $m$ é o número de $\theta$ iterados no segundo loop. Como temos 2 loops, um dentro do outro, a complexidade seria a multiplicação dos dois.
+
+:::
+
+???
+
 ## Exercícios (Todos - quinta)
 
 Lucas Lima

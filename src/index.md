@@ -137,6 +137,21 @@ Esta é uma das grandes vantagens da Transformada de Hough, poder detectar todas
 
 Teoria do algorítmo (Pini)
 
+
+Para encontrar a reta mais relevante, que possui o maior número de interseções com os pontos da imagem, adotamos uma abordagem baseada em uma matriz $c$ por $m$, inicializada com zeros. Essa matriz representa todos os possíveis parâmetros $m$ e $c$ que definem uma reta no espaço.
+
+Ao parametrizar os pontos da imagem em outro domínio, geramos uma linha parametrizada para cada ponto da linha original. Cada ponto dessa linha parametrizada é associado a um par de coordenadas ($m$, $c$), e incrementamos o valor correspondente na matriz em uma unidade. Isso nos permite analisar qual par de parâmetros ($m$, $c$) resulta na maior quantidade de interseções, indicando assim a reta mais adequada para representar os dados.
+
+Esta abordagem nos permite encontrar de forma eficiente a reta que melhor se ajusta aos pontos da imagem, considerando sua frequência de interseção com outras linhas parametrizadas.
+
+:animacao_matriz1
+
+Outro exemplo: 
+
+:animacao_matriz2
+
+Percebemos neste caso que um dos pontos está um pouco fora da reta, o que causa uma certa irregularidade na matriz, com mais de um ponto com um valor maior que 1 (mais de uma intesecção), porém, mesmo neste caso o algorítimo ainda escolhe a coordenada central da matriz, que possui o maior número de votos, o que representa a reta que inclui mais pontos. 
+
 ## Problema prático da parametrização
 
 Apesar de a parametrização acima estar correta, ela não é a mais adequada para a implementação da Transformada de Hough. Isso porque, A busca por linhas no espaço de parâmetros torna-se mais complexa devido ao grande número de combinações possíveis de $m$ e $c$, o tempo de processamento aumenta consideravelmente, especialmente em imagens com grande quantidade de pixels e a eficiência da Transformada de Hough é afetada negativamente.
@@ -170,6 +185,18 @@ Teoria do algorítmo (Pini)
 ## Implementando o algorítmo (Todos - quinta)
 
 ## Complexidade (Todos - quinta)
+
+??? Checkpoint
+
+Levando o código montado anteriormente, tente analisar a complexidade do algorítmo. Pense em alto nível nesse primeiro momento, e depois tente analisar a complexidade de cada operação.
+
+::: Gabarito
+
+A complexidade do algorítmo é $O(n*m)$, onde $n$ é o número de pixels da imagem e $m$ é o número de $\theta$ iterados no segundo loop. Como temos 2 loops, um dentro do outro, a complexidade seria a multiplicação dos dois.
+
+:::
+
+???
 
 ## Exercícios (Todos - quinta)
 

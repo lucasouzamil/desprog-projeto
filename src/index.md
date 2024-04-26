@@ -25,7 +25,7 @@ Imagine que você tem uma imagem e quer detectar linhas nela. Uma das maneiras d
 
 3. Com os parâmetros fornecidos pela transformada, é possível visualizar as respectivas retas na imagem original.
 
-## Como pode ser utilizada na prática?
+E como isso seria útil em uma aplicação real?
 
 Anteriormente, na matéria de Robótica Computacional, vocês aprenderam a controlar robôs de forma autônoma, e a Transformada de Hough é uma técnica bastante utilizada nesse contexto para ajudar na navegação de robôs.
 
@@ -57,13 +57,11 @@ Uma possível solução seria segmentar as bordas da pista e, a partir disso, de
 :::
 ???
 
-## Ideia inicial
+## Compreendendo a ideia: o pulo do gato!
 
-Teoria matemática (Lucas)
+Para compreender como detectar retas em uma imagem, é útil revisitar o seu conceito matemático. Uma reta pode ser representada pela equação $y=mx+c$, onde $y$ e $x$ representam as coordenadas de um ponto na reta, $m$ é o coeficiente angular (tangente do o angulo theta entre a reta e a horizontal) indicando o quão inclinada ela é, e $c$ é o coeficiente linear (indicando onde ela intercepta o eixo $y$).
 
-Para compreender como detectar retas em uma imagem, é útil revisitar o seu conceito matemático. Uma reta pode ser representada pela equação $y=mx+c$, onde $y$ e $x$ representam as coordenadas de um ponto na reta, $m$ é o coeficiente angular (indicando o quão inclinada ela é) e $c$ é o coeficiente linear (indicando onde ela intercepta o eixo $y$).
-
-![](equacao-grau1.webp)
+![](equacao1grau.png)
 
 Essa equação nos capacita a descrever qualquer reta em um plano cartesiano, o que se revela especialmente útil em imagens, já que uma imagem digital geralmente é representada por uma matriz, ou seja, um plano cartesiano, no qual cada pixel (ponto) possui coordenadas $x$ e $y$. 
 
@@ -97,7 +95,7 @@ Um reta do domínio dos parâmetros é representada por infinitas retas que pass
 
 Okay, espero que tenha ficado claro o que um representa no outro e vice-versa, mas onde identificamos os padrões que a transformada promete?
 
-Se você é bastante atento, pode ter percebido que, a medida com que os pontos da imagem são transferidos para o domínio dos parâmetros, essas retas podem se cruzar, e é exatamente esse o pulo do gato! Pois **cruzamentos na transformada significam uma correspondência entre parâmetros que descrevem uma potêncial reta na imagem original.** Calma, respira, vou explicar...
+Se você é bastante atento, pode ter percebido que, a medida com que os pontos da imagem são transferidos para o domínio dos parâmetros, essas retas podem se cruzar, e é exatamente esse o **pulo do gato**! Pois **cruzamentos na transformada significam uma correspondência entre parâmetros que descrevem uma potêncial reta na imagem original.** Calma, respira, vou explicar...
 
 Quando duas linhas no domínio dos parâmetros se cruzam, isso significa que os dois pontos correspondentes na imagem original estão conectados por uma reta com os parâmetros $m$ e $c$, os quais são a coordenada da interesecção no gráfico da transformada.
 
@@ -135,57 +133,142 @@ No caso do gabarito do checkpoint anterior, a reta amarela era a mais relevante 
 
 Esta é uma das grandes vantagens da Transformada de Hough, poder detectar todas as retas que ligam pontos na imagem original e filtrá-las pelo seu grau de relevância.
 
-Teoria do algorítmo (Pini)
+## Compreendendo a ideia: o algorítmo
+
+Após entender a ideia matemática, você deve estar um pouco curioso em como essa lógica é implementada em um algorítimo. 
+
+Ora, começemos do início, temos uma imagem com o contorno da imagem original, ou seja, uma matriz dos pixels, cada pixel possui uma coordenada ($x$, $y$), basta passa-lo para o domínio ($m$, $c$). Esse domínio pode ser representado por outra matriz, onde as linhas são representadas por $c$ e as colunas por $m$.
+
+![](matriz.png)
+
+??? Checkpoint
+
+Tendo em mente os conceitos da transformada ditos anteriormente, imagine como um ponto da imagem do contorno poderia ser representado na matriz dos parâmetros. Assuma que a matriz inicia com todos valores zerados e os pontos por onde passa uma reta se soma 1.
+
+![](graficos/1.png)
+
+::: Gabarito
+
+![](animacao_matriz1/2.png)
+
+Lembre-se, um ponto do domínio das coordendas é representado por uma reta no domínio dos parâmetros.
+
+:::
+
+???
 
 
-Para encontrar a reta mais relevante, que possui o maior número de interseções com os pontos da imagem, adotamos uma abordagem baseada em uma matriz $c$ por $m$, inicializada com zeros. Essa matriz representa todos os possíveis parâmetros $m$ e $c$ que definem uma reta no espaço.
+??? Checkpoint
 
-Ao parametrizar os pontos da imagem em outro domínio, geramos uma linha parametrizada para cada ponto da linha original. Cada ponto dessa linha parametrizada é associado a um par de coordenadas ($m$, $c$), e incrementamos o valor correspondente na matriz em uma unidade. Isso nos permite analisar qual par de parâmetros ($m$, $c$) resulta na maior quantidade de interseções, indicando assim a reta mais adequada para representar os dados.
+O que você imagina que deve acontecer quando pontos alinhados na imagem original são transferidos para a matriz dos parâmetros? Simule como foi feito no gabarito do checkpoit anterior. 
 
-Esta abordagem nos permite encontrar de forma eficiente a reta que melhor se ajusta aos pontos da imagem, considerando sua frequência de interseção com outras linhas parametrizadas.
+**OBS**: Não se esqueça de incrementar em 1 os pontos por onde passa uma reta.
+
+::: Gabarito
 
 :animacao_matriz1
 
-Outro exemplo: 
+De acordo com que os pontos da imagem são transferidos para a matriz dos parâmetros, os pontos onde há intersecção são incrementados.
+
+:::
+
+???
+
+??? Checkpoint
+
+Como vocẽ deduziria que a matriz dos parâmetros fosse ficar após a transformada dos pontos abaixo?
+
+![](pontos-tortos.png)
+
+
+::: Gabarito
 
 :animacao_matriz2
 
-Percebemos neste caso que um dos pontos está um pouco fora da reta, o que causa uma certa irregularidade na matriz, com mais de um ponto com um valor maior que 1 (mais de uma intesecção), porém, mesmo neste caso o algorítimo ainda escolhe a coordenada central da matriz, que possui o maior número de votos, o que representa a reta que inclui mais pontos. 
+Um ou mais indíces da matriz teriam valores maiores do que um. E como dito anteriormente, a coordenada onde há mais intersecções na transformada corresponde aos parâmetros da reta mais relevante no conjunto de pontos da imagem original.
 
-## Problema prático da parametrização
+:::
 
-Apesar de a parametrização acima estar correta, ela não é a mais adequada para a implementação da Transformada de Hough. Isso porque, A busca por linhas no espaço de parâmetros torna-se mais complexa devido ao grande número de combinações possíveis de $m$ e $c$, o tempo de processamento aumenta consideravelmente, especialmente em imagens com grande quantidade de pixels e a eficiência da Transformada de Hough é afetada negativamente.
+???
 
-Tudo isso, pois $-\infty < m < \infty$ e $-\infty < c < \infty$, o que torna a busca por linhas no espaço de parâmetros muito custosa.
+Após aplicar a transformada para cada ponto na imagem, basta varrer a matriz ($m$, $c$) e selecionar as coordenadas que amarzenam os maiores valores. Essas coordenadas correspondem aos parâmetros das retas mais relevantes na imagem original.
 
-Para resolver esse problema, podemos utilizar a parametrização polar, que é dada por:
+## Problema prático dos parâmetros ($m$, $c$)
 
-$$x\sin(\theta) - y\cos(\theta) + \rho = 0$$
+A implementação acima é correta teoricamente, mas na prática não funciona bem. Isso ocorre porque os parâmetros $m$ e $c$ podem assumir um número infinito de valores:
 
-O conceito é o mesmo e, na pratica, ambas as parametrizações são equivalentes, mas a parametrização polar é mais eficiente computacionalmente.
+$$-\infty < m < \infty$$
+
+$$-\infty < c < \infty$$
+
+No entanto, a natureza finita dos computadores impede a computação e o armazenamento de um número infinito de variáveis. Portanto, embora a notação matemática permita a representação de intervalos infinitos, na prática, os cálculos e armazenamentos devem ser limitados a um conjunto finito de valores significativos para que seja possível de aplicar o algorítimo.
+
+## Uma possível solução: a mágica da parametrização polar
+
+Uma parametrização nada mais é do que uma forma de escrever uma função, por exemplo, uma reta usando os parâmetros $m$ e $c$. Mas como dito anteriormente, a parametrização $y=mx+c$ não é conveniente para implementar o algorítimo.
+
+Visto isso, uma parametrização adequada seria a polar, na qual descreve uma reta em função de $θ$ e $ρ$, onde $θ$ significa o ângulo em radianos entre a reta e a horizontal, e $ρ$ signifca a distância da origem até a reta.
+
+$$y=\frac{x\sin(\theta) + \rho}{cos(\theta)}$$
+
+![](reta-polar.png)
+
+* $θ$: ângulo em radianos entre a reta e a horizontal 
+
+* $ρ$: distância da origem até a reta
+
+Antes de prosseguir, entre [neste link](https://www.geogebra.org/m/xzkd8ffg) do GeoGebra, altere os parâmetros e se convença de que a parametrização acima faz sentido.
 
 ??? Checkpoint
-Agora que você sabe que a parametrização polar é mais eficiente computacionalmente, tente entender o porquê disso.
 
-**Dica:** Tente pensar em como a parametrização polar pode reduzir o número de combinações possíveis de $m$ e $c$.
+Sabendo da parametrização polar, tente explicar do porque ela seria últil na aplicação do algorítimo da Transformada de Hough.
+
+**Dica:** lembre-se de que na parametrização anterior, não foi possível aplicar o algorítimo pois os parâmetros $m$ e $c$ podiam assumir infinitos valores.
 
 ::: Gabarito
-$\theta$ é um ângulo que varia de 0 a 180 graus, e $\rho$ é a distância da origem ao ponto mais próximo da reta, ou seja, seu valor máximo corresponde ao tamanho da imagem. Essa pequena alteração na parametrização reduz o número de combinações possíveis, o que torna a busca por linhas no espaço de parâmetros mais eficiente.
+
+A parametrização polar é possível pois os parâmetros $θ$ e $ρ$ possuem valores finitos. Visto que, a distância $ρ$ da origem até a reta está restrita ao tamanho da diagonal da imagem, e o parâmetro $θ$ está restrito a π, pois, como é uma função senoidal, os valores passam a se repetir depois deste limite.
+
+$$0 < ρ < \sqrt{x^2 + y^2}$$
+
+$$0 < θ < π$$
+
 :::
 ???
 
-## Uma possível solução
+Ta ok, mas como funciona matemáticamente? Ora, da mesma maneira que na primeira parametrização, mas ao invés de passarmos os pontos de uma imagem para o domínio ($m$, $c$), passaremos para o domínio ($θ$, $ρ$). Ou seja, de $y=mx+c$ para $\rho =-x\sin(\theta) + y\cos(\theta)$.
 
-Teoria matemática (Lucas)
+??? Checkpoint
 
-Teoria do algorítmo (Pini)
+Como foi feito na primeira transformada, tente imaginar como seria a representação de um ponto no novo domínio  ($θ$, $ρ$), usando suas cooredeanadas $x$ e $y$ como constantes. Se possível pegue um papel e uma caneta e desenhe um gráfico.
 
-![](logo.png)
+![](graficos/1.png)
 
-## Implementando o algorítmo (Todos - quinta)
+::: Gabarito
 
-## Complexidade (Todos - quinta)
+![](animacao_senoides/1.png)
 
+Um ponto do domínio das coordendas é representado por uma senóide no domínio dos novos parâmetros!
+
+:::
+???
+
+De maneira análoga ao domínio ($m$, $c$), quando duas senóides no domínio dos parâmetros se cruzam, isso significa que os dois pontos correspondentes na imagem original estão conectados por uma reta com os parâmetros $θ$ e $ρ$, os quais são a coordenada da interesecção no gráfico da transformada.
+
+
+:animacao_senoides
+
+O exemplo acima mostra dois pontos de cruzamento, $\theta$ e $\theta + \pi$, mas isto é só para mostrar que de acordo com que a senóide se repete, ela passa a cruzar em coordenadas de parãmetros equivalentes. Na prática isso não acontece, pois $0 < θ < π$.
+
+Assim, o algorítimo também é feito de maneira análoga a quando os parâmetros eram $m$ e $c$, ou seja, cria-se uma matriz onde as linhas são representadas por $ρ$ e as colunas representadas por $θ$. E aqui que está a grande vantagem, pois o tamanho desta matriz é limitado, ou seja, o máximo de valores em que $ρ$ pode assumir (linhas), é de $0$ até a quantidade de pixels na diagonal da imagem $\sqrt{x^2 + y^2}$, e a máxima quantidade de valores que $\theta$ pode assumir (colunas) são valores de $0$ a $\pi$, com um $\Delta \theta$ a escolha do usuário, sendo que, quanto menor, mais preciso será o algorítimo.
+
+:animacao_matriz3
+
+No exemplo acima foi trasnferido apenas um ponto da imagem original para a matriz dos parâmetros, isto por que a quantidade de linhas e colunas são pequenas, o que seria incoveninete desenhar várias senóides.
+
+Mas a lógica é a mesma das retas, num contexto prático, haverá inúmeros mais pontos, e a medida com que as senóides vão se sobrepondo, é incrementado 1. Após aplicar a transformada para cada ponto na imagem, basta varrer a matriz ($\theta$, $\rho$) e filtrar as coordenadas que amarzenam os maiores valores. Essas coordenadas correspondem aos parâmetros das retas mais relevantes na imagem original.
+
+## Complexidade
 ??? Checkpoint
 
 Levando o código montado anteriormente, tente analisar a complexidade do algorítmo. Pense em alto nível nesse primeiro momento, e depois tente analisar a complexidade de cada operação.
@@ -198,6 +281,6 @@ A complexidade do algorítmo é $O(n*m)$, onde $n$ é o número de pixels da ima
 
 ???
 
-## Exercícios (Todos - quinta)
+## Exercícios
 
-Lucas Lima
+PROXIMA ENTREGA

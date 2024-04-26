@@ -1,22 +1,60 @@
-Transformada de Hough
-======
+# Transformada de Hough
 
-O que é
----------
-(Badin)
+## O que é
 
+Imagine que você tem uma imagem e quer detectar linhas nela. Como você faria isso? Uma maneira de fazer isso é usar a Transformada de Hough. A Transformada de Hough é uma técnica usada principalmente em processamento de imagens para detectar formas, principalmente linhas, em uma imagem. Ela é especialmente útil quando queremos identificar padrões geométricos em uma imagem, como linhas retas, círculos ou elipses.
 
-Ideia inicial
----------
+Vamos supor que, após aplicar um filtro de detecção de bordas em uma imagem, assim como os que viram em Robótica Computacional, você tenha uma imagem como a de baixo.
+
+![](hough_input.png)
+
+A partir do método da transformada de Hough, é possível detectar as linhas presentes na imagem. O output da aplicação da transformada de Hough na imagem acima é a seguinte:
+
+![](hough_output.png)
+
+E a partir desse output pode-se traçar as linhas detectadas na imagem original.
+
+![](hough_output2.png)
+
+## Como Pode ser Utilizada na prática?
+
+A transformada de Hough é uma técnica muito poderosa e versátil. Anteriormente a matéria de Robótica Computacional foi mencionada, e a transformada de Hough é uma técnica muito utilizada em robótica, principalmente em robôs móveis. Ela é utilizada para detectar linhas em imagens de câmeras de robôs, o que é muito útil para a navegação autônoma de robôs móveis.
+
+??? Checkpoint
+Vamos supor que queremos desenvolver um carro autônomo. Que processo poderiamos utilizar para encontrar o caminho que o carro deve seguir numa pista? Desenhe um esboço de como você faria isso.
+
+::: Gabarito
+Uma possível solução seria segmentar as bordas da pista e, a partir disso, detectar as linhas presentes na imagem. A partir das linhas detectadas, poderíamos encontrar o ponto futuro que o carro deveria seguir para não sair do caminho.
+
+<div style="display: flex; justify-content: space-between;">
+    <div style="width: 48%;">
+        <img src="input-output/road.jpeg" alt="Imagem 1">
+        <p style="display: flex; justify-content: center;">Imagem original</p>
+    </div>
+    <div style="width: 48%;">
+        <img src="input-output/road-borders.png" alt="Imagem 2">
+        <p style="display: flex; justify-content: center;">Imagem com bordas detectadas</p>
+    </div>
+    <div style="width: 48%;">
+        <img src="input-output/ponto_futuro.png" alt="Imagem 3">
+        <p style="display: flex; justify-content: center;">Ponto futuro detectado a partir das bordas</p>
+    </div>
+</div>
+
+:::
+???
+
+## Ideia inicial
+
 Teoria matemática (Lucas)
 
 Para compreender como detectar linhas em uma imagem, é útil revisitar o conceito matemático de uma linha. Uma linha pode ser representada pela equação $y=mx+c$, onde $y$ e $x$ representam as coordenadas de um ponto na linha, $m$ é o coeficiente angular (indicando o quão inclinada a linha é) e $c$ é o coeficiente linear (indicando onde a linha intercepta o eixo $y$).
 
 ![](equacao-grau1.webp)
 
-Essa equação nos capacita a descrever qualquer linha em um plano cartesiano, o que se revela especialmente útil em imagens, já que uma imagem digital geralmente é representada por uma matriz, ou seja, um plano cartesiano, no qual cada pixel (ponto) possui coordenadas $x$ e $y$. 
+Essa equação nos capacita a descrever qualquer linha em um plano cartesiano, o que se revela especialmente útil em imagens, já que uma imagem digital geralmente é representada por uma matriz, ou seja, um plano cartesiano, no qual cada pixel (ponto) possui coordenadas $x$ e $y$.
 
-Tá mas, por que isso é últil na Transformada de Hough?  E antes disso, no que consiste uma transformada? 
+Tá mas, por que isso é últil na Transformada de Hough? E antes disso, no que consiste uma transformada?
 
 Uma transformada basicamente consiste em passar uma função matemática de um domínio para outro. De maneira mais simplória, **uma transformada é um jeito de olhar para as coisas de uma nova perspectiva**. Imagine que você tem uma função (como uma equação matemática) que descreve algo em um espaço, como pontos em uma imagem. Agora, aplicar uma transformada significa pegar essa função e mudar a forma como a representamos, levando-a para um novo espaço. Isso nos permite ver coisas que talvez não fossem óbvias na forma original.
 
@@ -44,7 +82,7 @@ Um reta do domínio dos parâmetros é representada por infinitas retas que pass
 :::
 ???
 
-Okay, espero que tenha ficado claro o que um representa no outro e vice-versa, mas onde identificamos os padrões que a transformada promete? 
+Okay, espero que tenha ficado claro o que um representa no outro e vice-versa, mas onde identificamos os padrões que a transformada promete?
 
 Se você é bastante atento, pode ter percebido que, a medida com que os pontos da imagem são transferidos para o domínio dos parâmetros, essas retas podem se cruzar, e é exatamente esse o pulo do gato! Pois **cruzamentos na transformada significam uma correspondência entre parâmetros que descrevem uma potêncial linha na imagem original.** Calma, respira, vou explicar...
 
@@ -68,9 +106,9 @@ O caso de exemplo é um caso perfeito, onde todos os pontos estão alinhados, em
 
 ??? Checkpoint
 
-Em uma imagem real, cada ponto pode estar potencialmente conectado a todos os outros por uma reta. Ás vezes a reta liga apenas dois pontos ou  pode ligar inúmeros deles. Tente pensar em como determinar ás retas mais relevantes de uma imagem analisando apenas o gráfico da transformada.
+Em uma imagem real, cada ponto pode estar potencialmente conectado a todos os outros por uma reta. Ás vezes a reta liga apenas dois pontos ou pode ligar inúmeros deles. Tente pensar em como determinar ás retas mais relevantes de uma imagem analisando apenas o gráfico da transformada.
 
-**Dica:** Analise o gabarito do checkpoint anterior e busque uma maneira de justificar por que a reta amarela é a mais relevante para o conjunto de pontos da imagem. 
+**Dica:** Analise o gabarito do checkpoint anterior e busque uma maneira de justificar por que a reta amarela é a mais relevante para o conjunto de pontos da imagem.
 
 **OBS:** Justifique com base no gráfico da transformada.
 
@@ -82,45 +120,44 @@ No caso do gabarito do checkpoint anterior, a reta amarela era a mais relevante 
 :::
 ???
 
-
-Esta é uma das grandes vantagens da Transformada de Hough, poder detectar todas as retas que ligam pontos na imagem original e filtrá-las pelo seu grau de relevância. 
-
-
-
-<div style="display: flex; justify-content: space-between;">
-    <div style="width: 48%;">
-        <img src="road.jpeg" alt="Imagem 1">
-        <p style="display: flex; justify-content: center;">Imagem original</p>
-    </div>
-    <div style="width: 48%;">
-        <img src="road-borders.png" alt="Imagem 2">
-        <p style="display: flex; justify-content: center;">Imagem com bordas detectadas</p>
-    </div>
-</div>
-
-
+Esta é uma das grandes vantagens da Transformada de Hough, poder detectar todas as retas que ligam pontos na imagem original e filtrá-las pelo seu grau de relevância.
 
 Teoria do algorítmo (Pini)
 
-Problemas (Badin)
+## Problema prático da parametrização
 
+Apesar de a parametrização acima estar correta, ela não é a mais adequada para a implementação da Transformada de Hough. Isso porque, A busca por linhas no espaço de parâmetros torna-se mais complexa devido ao grande número de combinações possíveis de $m$ e $c$, o tempo de processamento aumenta consideravelmente, especialmente em imagens com grande quantidade de pixels e a eficiência da Transformada de Hough é afetada negativamente.
 
-Uma possível solução
----------
+Tudo isso, pois $-\infty < m < \infty$ e $-\infty < c < \infty$, o que torna a busca por linhas no espaço de parâmetros muito custosa.
+
+Para resolver esse problema, podemos utilizar a parametrização polar, que é dada por:
+
+$$x\sin(\theta) - y\cos(\theta) + \rho = 0$$
+
+O conceito é o mesmo e, na pratica, ambas as parametrizações são equivalentes, mas a parametrização polar é mais eficiente computacionalmente.
+
+??? Checkpoint
+Agora que você sabe que a parametrização polar é mais eficiente computacionalmente, tente entender o porquê disso.
+
+**Dica:** Tente pensar em como a parametrização polar pode reduzir o número de combinações possíveis de $m$ e $c$.
+
+::: Gabarito
+$\theta$ é um ângulo que varia de 0 a 180 graus, e $\rho$ é a distância da origem ao ponto mais próximo da reta, ou seja, seu valor máximo corresponde ao tamanho da imagem. Essa pequena alteração na parametrização reduz o número de combinações possíveis, o que torna a busca por linhas no espaço de parâmetros mais eficiente.
+:::
+???
+
+## Uma possível solução
+
 Teoria matemática (Lucas)
 
 Teoria do algorítmo (Pini)
 
-![](logo.png) 
+![](logo.png)
 
-Implementando o algorítmo (Todos - quinta)
----------
+## Implementando o algorítmo (Todos - quinta)
 
+## Complexidade (Todos - quinta)
 
-Complexidade  (Todos - quinta)
----------
+## Exercícios (Todos - quinta)
 
-
-Exercícios  (Todos - quinta)
----------
 Lucas Lima

@@ -5,23 +5,19 @@
 Imagine que você tem uma imagem e quer detectar linhas nela. Uma das maneiras de fazer isso é usando a Transformada de Hough. A Transformada de Hough é uma técnica usada principalmente em processamento de imagens para detectar formas geométricas, desde retas, circulos, elipses e outras diversas. Mas como ela funciona?
 
 <div style="display: flex; justify-content: space-between;">
-    <div style="width: 32.5%;">
+    <div style="width: 40%;">
         <img src="hough-input.png" alt="Imagem 1">
         <p style="display: flex; justify-content: center;">1. Input</p>
     </div>
-    <div style="width: 32.5%;">
-        <img src="hough-output.png" alt="Imagem 2">
+    <div style="width: 40%;">
+        <img src="hough-use.png" alt="Imagem 2">
         <p style="display: flex; justify-content: center;">2. Output</p>
-    </div>
-    <div style="width: 32.5%;">
-        <img src="hough-use.png" alt="Imagem 3">
-        <p style="display: flex; justify-content: center;">3. Uso</p>
     </div>
 </div>
 
 1. A transformada recebe uma imagem com os contornos da imagem original (outro algorítimo é responsável por isso).
 
-2. Após o processamento, ela retorna os parâmetros das retas presentes na imagem original. Não se preocupe em entender o que esse gráfico de senóides signfica por agora, apenas entenda que os circulos vermelhos representam pontos, os quais as coordenadas são os parâmetros das retas na imagem original.
+2. Após o processamento, ela retorna os parâmetros das retas presentes na imagem original.
 
 3. Com os parâmetros fornecidos pela transformada, é possível visualizar as respectivas retas na imagem original.
 
@@ -30,29 +26,16 @@ E como isso seria útil em uma aplicação real?
 Anteriormente, na matéria de Robótica Computacional, vocês aprenderam a controlar robôs de forma autônoma, e a Transformada de Hough é uma técnica bastante utilizada nesse contexto para ajudar na navegação de robôs.
 
 ??? Checkpoint
-Vamos supor que queremos desenvolver um carro autônomo que deve percorrer uma estrada. Que processo poderia ser utilizado, utilizando a transformada de Hough, para encontrar a direção que o carro deve seguir?
+Vamos supor que queremos desenvolver um carro autônomo que deve percorrer uma estrada. Levando em consideração que já temos as bordas da estrada segmentadas, como você poderia, utilizando a transformada de Hough, encontrar o caminho que o carro deve seguir?
 
-**Dica**: Imagine as retas que compõem a imagem.
+**Dica**: Como poderiamos encontrar a intersecção das bordas da estrada?
 
-![](input-output/road.jpeg)
+![](input-output/road-borders.png)
 
 ::: Gabarito
-Uma possível solução seria segmentar as bordas da pista e, a partir disso, detectar as linhas presentes nessas bordas. A partir das linhas detectadas, poderíamos encontrar o ponto futuro em seus cruzamentos, ponto o qual dita a direção que o carro deve seguir para continuar na pista.
+Uma possível solução seria detectar as linhas presentes nessas bordas. A partir das linhas detectadas, poderíamos encontrar o ponto futuro em seus cruzamentos, ponto o qual dita a direção que o carro deve seguir para continuar na pista.
 
-<div style="display: flex; justify-content: space-between;">
-    <div style="width: 32.5%;">
-        <img src="input-output/road.jpeg" alt="Imagem 1">
-        <p style="display: flex; justify-content: center;">1. Imagem original</p>
-    </div>
-    <div style="width: 32.5%;">
-        <img src="input-output/road-borders.png" alt="Imagem 2">
-        <p style="display: flex; justify-content: center;">2. Bordas segmentadas</p>
-    </div>
-    <div style="width: 32.5%;">
-        <img src="input-output/road-lines.png" alt="Imagem 3">
-        <p style="display: flex; justify-content: center;">3. Linhas detectadas</p>
-    </div>
-</div>
+![](input-output/road-lines.png)
 
 :::
 ???
@@ -63,7 +46,7 @@ Para compreender como detectar retas em uma imagem, é útil revisitar o seu con
 
 ![](equacao1grau.png)
 
-Essa equação nos capacita a descrever qualquer reta em um plano cartesiano, o que se revela especialmente útil em imagens, já que uma imagem digital geralmente é representada por uma matriz, ou seja, um plano cartesiano, no qual cada pixel (ponto) possui coordenadas $x$ e $y$. 
+Essa equação nos capacita a descrever qualquer reta em um plano cartesiano, o que se revela especialmente útil em imagens, já que uma imagem digital geralmente é representada por uma matriz, ou seja, um plano cartesiano, no qual cada pixel (ponto) possui coordenadas $x$ e $y$.
 
 Tá mas, por que isso é últil na Transformada de Hough? E antes disso, no que consiste uma transformada?
 
@@ -135,11 +118,11 @@ Esta é uma das grandes vantagens da Transformada de Hough, poder detectar todas
 
 ## Compreendendo a ideia: o algorítmo
 
-Após entender a ideia matemática, você deve estar um pouco curioso em como essa lógica é implementada em um algorítimo. 
+Após entender a ideia matemática, você deve estar um pouco curioso em como essa lógica é implementada em um algorítimo.
 
 Ora, começemos do início, temos uma imagem com o contorno da imagem original, ou seja, uma matriz dos pixels, cada pixel possui uma coordenada ($x$, $y$), basta passa-lo para o domínio ($m$, $c$). Esse domínio pode ser representado por outra matriz, onde as linhas são representadas por $c$ e as colunas por $m$.
 
-![](matriz.png)
+<!-- ![](matriz.png) -->
 
 ??? Checkpoint
 
@@ -157,10 +140,9 @@ Lembre-se, um ponto do domínio das coordendas é representado por uma reta no d
 
 ???
 
-
 ??? Checkpoint
 
-O que você imagina que deve acontecer quando pontos alinhados na imagem original são transferidos para a matriz dos parâmetros? Simule como foi feito no gabarito do checkpoit anterior. 
+O que você imagina que deve acontecer quando pontos alinhados na imagem original são transferidos para a matriz dos parâmetros? Simule como foi feito no gabarito do checkpoit anterior.
 
 **OBS**: Não se esqueça de incrementar em 1 os pontos por onde passa uma reta.
 
@@ -180,7 +162,6 @@ Como vocẽ deduziria que a matriz dos parâmetros fosse ficar após a transform
 
 ![](pontos-tortos.png)
 
-
 ::: Gabarito
 
 :animacao_matriz2
@@ -195,52 +176,44 @@ Após aplicar a transformada para cada ponto na imagem, basta varrer a matriz ($
 
 ## Problema prático dos parâmetros ($m$, $c$)
 
-A implementação acima é correta teoricamente, mas na prática não funciona bem. Isso ocorre porque os parâmetros $m$ e $c$ podem assumir um número infinito de valores:
+A implementação acima é correta teoricamente, mas na prática não funciona bem. Isso ocorre porque, ao utilizar os parâmetros $m$ e $c$, pode-se encontrar alguns problemas ao lidar com linhas verticais, onde a inclinação $m$ se torna infinita ($tan (90°)$).
 
-$$-\infty < m < \infty$$
-
-$$-\infty < c < \infty$$
-
-No entanto, a natureza finita dos computadores impede a computação e o armazenamento de um número infinito de variáveis. Portanto, embora a notação matemática permita a representação de intervalos infinitos, na prática, os cálculos e armazenamentos devem ser limitados a um conjunto finito de valores significativos para que seja possível de aplicar o algorítimo.
+Dessa forma, essa abordagem não é a mais adequada quando pensamos numa aplicação prática.
 
 ## Uma possível solução: a mágica da parametrização polar
 
 Uma parametrização nada mais é do que uma forma de escrever uma função, por exemplo, uma reta usando os parâmetros $m$ e $c$. Mas como dito anteriormente, a parametrização $y=mx+c$ não é conveniente para implementar o algorítimo.
 
-Visto isso, uma parametrização adequada seria a polar, na qual descreve uma reta em função de $θ$ e $ρ$, onde $θ$ significa o ângulo em radianos entre a reta e a horizontal, e $ρ$ signifca a distância da origem até a reta.
+Visto isso, uma parametrização polar, na qual descreve uma reta em função de $θ$ e $ρ$, onde $θ$ significa o ângulo em radianos entre a reta e a horizontal, e $ρ$ signifca a distância da origem até a reta, superaria tais dificuldades.
 
 $$y=\frac{x\sin(\theta) + \rho}{cos(\theta)}$$
 
 ![](reta-polar.png)
 
-* $θ$: ângulo em radianos entre a reta e a horizontal 
+- $θ$: ângulo em radianos entre a reta e a horizontal
 
-* $ρ$: distância da origem até a reta
+- $ρ$: distância da origem até a reta
 
 Antes de prosseguir, entre [neste link](https://www.geogebra.org/m/xzkd8ffg) do GeoGebra, altere os parâmetros e se convença de que a parametrização acima faz sentido.
 
 ??? Checkpoint
 
-Sabendo da parametrização polar, tente explicar do porque ela seria últil na aplicação do algorítimo da Transformada de Hough.
+Sabendo da parametrização polar, tente explicar como ela arrumaria o problema acima na aplicação do algorítimo da Transformada de Hough.
 
-**Dica:** lembre-se de que na parametrização anterior, não foi possível aplicar o algorítimo pois os parâmetros $m$ e $c$ podiam assumir infinitos valores.
+**Dica:** lembre-se de que na parametrização anterior, a questão que trazia problemas ao código era: $$m\rightarrow\infty$$
 
 ::: Gabarito
 
-A parametrização polar é possível pois os parâmetros $θ$ e $ρ$ possuem valores finitos. Visto que, a distância $ρ$ da origem até a reta está restrita ao tamanho da diagonal da imagem, e o parâmetro $θ$ está restrito a π, pois, como é uma função senoidal, os valores passam a se repetir depois deste limite.
-
-$$0 < ρ < \sqrt{x^2 + y^2}$$
-
-$$0 < θ < π$$
+Como agora a parametrização não está em função da tangente de um ângulo, não existe a possibilidade de termos um número infinito nos cálculos. Isso nos permite corrigir o erro de não ser possível encontrar uma reta vertical a qual o ponto pertence.
 
 :::
 ???
 
-Ta ok, mas como funciona matemáticamente? Ora, da mesma maneira que na primeira parametrização, mas ao invés de passarmos os pontos de uma imagem para o domínio ($m$, $c$), passaremos para o domínio ($θ$, $ρ$). Ou seja, de $y=mx+c$ para $\rho =-x\sin(\theta) + y\cos(\theta)$.
+Certo, mas como funciona matemáticamente? Ora, da mesma maneira que na primeira parametrização, mas ao invés de passarmos os pontos de uma imagem para o domínio ($m$, $c$), passaremos para o domínio ($θ$, $ρ$). Ou seja, de $y=mx+c$ para $\rho =-x\sin(\theta) + y\cos(\theta)$.
 
 ??? Checkpoint
 
-Como foi feito na primeira transformada, tente imaginar como seria a representação de um ponto no novo domínio  ($θ$, $ρ$), usando suas cooredeanadas $x$ e $y$ como constantes. Se possível pegue um papel e uma caneta e desenhe um gráfico.
+Como foi feito na primeira transformada, tente imaginar como seria a representação de um ponto no novo domínio ($θ$, $ρ$), usando suas cooredeanadas $x$ e $y$ como constantes. Se possível pegue um papel e uma caneta e desenhe um gráfico.
 
 ![](graficos/1.png)
 
@@ -255,7 +228,6 @@ Um ponto do domínio das coordendas é representado por uma senóide no domínio
 
 De maneira análoga ao domínio ($m$, $c$), quando duas senóides no domínio dos parâmetros se cruzam, isso significa que os dois pontos correspondentes na imagem original estão conectados por uma reta com os parâmetros $θ$ e $ρ$, os quais são a coordenada da interesecção no gráfico da transformada.
 
-
 :animacao_senoides
 
 O exemplo acima mostra dois pontos de cruzamento, $\theta$ e $\theta + \pi$, mas isto é só para mostrar que de acordo com que a senóide se repete, ela passa a cruzar em coordenadas de parãmetros equivalentes. Na prática isso não acontece, pois $0 < θ < π$.
@@ -269,6 +241,7 @@ No exemplo acima foi trasnferido apenas um ponto da imagem original para a matri
 Mas a lógica é a mesma das retas, num contexto prático, haverá inúmeros mais pontos, e a medida com que as senóides vão se sobrepondo, é incrementado 1. Após aplicar a transformada para cada ponto na imagem, basta varrer a matriz ($\theta$, $\rho$) e filtrar as coordenadas que amarzenam os maiores valores. Essas coordenadas correspondem aos parâmetros das retas mais relevantes na imagem original.
 
 ## Complexidade
+
 ??? Checkpoint
 
 Levando o código montado anteriormente, tente analisar a complexidade do algorítmo. Pense em alto nível nesse primeiro momento, e depois tente analisar a complexidade de cada operação.

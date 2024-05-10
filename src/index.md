@@ -228,49 +228,50 @@ $$y=\frac{x\sin(\theta) + \rho}{cos(\theta)}$$
 
 Antes de prosseguir, entre [neste link](https://www.geogebra.org/m/xzkd8ffg) do GeoGebra, altere os parâmetros e se convença de que a parametrização acima faz sentido.
 
-??? Checkpoint
-
-Sabendo da parametrização polar, tente explicar como ela arrumaria o problema acima na aplicação do algorítimo da Transformada de Hough.
-
-**Dica:** lembre-se de que na parametrização anterior, a questão que trazia problemas ao código era: $$m\rightarrow\infty$$
-
-::: Gabarito
-
-Como agora a parametrização não está em função da tangente de um ângulo, não existe a possibilidade de termos um número infinito nos cálculos. Isso nos permite corrigir o erro de não ser possível encontrar uma reta vertical a qual o ponto pertence.
-
-:::
-???
-
-Certo, mas como funciona matemáticamente? Ora, da mesma maneira que na primeira parametrização, mas ao invés de passarmos os pontos de uma imagem para o domínio ($m$, $c$), passaremos para o domínio ($θ$, $ρ$). Ou seja, de $y=mx+c$ para $\rho =-x\sin(\theta) + y\cos(\theta)$.
+Certo, mas como funciona usando essa parametrização? Ora, da mesma maneira que na primeira parametrização, mas ao invés de passarmos os pontos de uma imagem para o domínio ($m$, $c$), passaremos para o domínio ($θ$, $ρ$). Ou seja, de $y=mx+c$ para $\rho =-x\sin(\theta) + y\cos(\theta)$.
 
 ??? Checkpoint
 
-Como foi feito na primeira transformada, tente imaginar como seria a representação de um ponto no novo domínio ($θ$, $ρ$), usando suas cooredeanadas $x$ e $y$ como constantes. Se possível pegue um papel e uma caneta e desenhe um gráfico.
+Como foi  feito na primeira transformada, tente imaginar como seria a representação de um ponto da imagem no novo domínio ($θ$, $ρ$), usando suas cooredeanadas $x$ e $y$ como constantes. Se possível pegue um papel e uma caneta e desenhe um gráfico.
 
-![](graficos/1.png)
+![](exemplo_senoides/1.png)
 
 ::: Gabarito
 
-![](animacao_senoides/1.png)
+![](exemplo_senoides/2.png)
 
 Um ponto do domínio das coordendas é representado por uma senóide no domínio dos novos parâmetros!
 
+Essa senóide representa o universo das infinitas retas que passam pelo respectivo ponto na imagem original.
+
 :::
 ???
 
-De maneira análoga ao domínio ($m$, $c$), quando duas senóides no domínio dos parâmetros se cruzam, isso significa que os dois pontos correspondentes na imagem original estão conectados por uma reta com os parâmetros $θ$ e $ρ$, os quais são a coordenada da interesecção no gráfico da transformada.
 
-:animacao_senoides
+??? Checkpoint
 
-O exemplo acima mostra dois pontos de cruzamento, $\theta$ e $\theta + \pi$, mas isto é só para mostrar que de acordo com que a senóide se repete, ela passa a cruzar em coordenadas de parãmetros equivalentes. Na prática isso não acontece, pois $0 < θ < π$.
+De acordo com que transportamos os pontos da imagem para o novo domínio, as senóides podem se cruzar. O que isso significa?
 
-Assim, o algorítimo também é feito de maneira análoga a quando os parâmetros eram $m$ e $c$, ou seja, cria-se uma matriz onde as linhas são representadas por $ρ$ e as colunas representadas por $θ$. E aqui que está a grande vantagem, pois o tamanho desta matriz é limitado, ou seja, o máximo de valores em que $ρ$ pode assumir (linhas), é de $0$ até a quantidade de pixels na diagonal da imagem $\sqrt{x^2 + y^2}$, e a máxima quantidade de valores que $\theta$ pode assumir (colunas) são valores de $0$ a $\pi$, com um $\Delta \theta$ a escolha do usuário, sendo que, quanto menor, mais preciso será o algorítimo.
+![](exemplo_senoides/3.png)
+
+::: Gabarito
+
+![](exemplo_senoides/4.png)
+
+Quando duas senóides no domínio dos parâmetros se cruzam, isso significa que os dois pontos correspondentes na imagem original estão conectados por uma reta com os parâmetros $θ$ e $ρ$, os quais são a coordenada da interesecção no gráfico da transformada.
+
+:::
+???
+
+O exemplo acima mostra dois pontos de cruzamento, $\theta$ e $\theta + \pi$, mas isto é só para mostrar que de acordo com que a senóide se repete, ela passa a cruzar em coordenadas de parãmetros equivalentes, o que significa que as retas serão iguais. Sabendo disso, ao implementar o algorítimo podemos limitar intervalo a $0 < θ < \pi$. Assim é feito de maneira análoga a quando os parâmetros eram $m$ e $c$, ou seja, cria-se uma matriz onde as linhas são representadas por $\rho$ e as colunas representadas por $\theta$. 
+
+E aqui que está uma das grandes vantagens dessa parametrização, pois o tamanho desta matriz é limitado, ou seja, o máximo de valores em que $ρ$  (distância entre a origem e a reta) pode assumir é o tamanho da diagonal da imagem $\sqrt{x^2 + y^2}$, e a máxima quantidade de valores que $\theta$ pode assumir (colunas) são valores de $0$ a $\pi$, com um $\Delta \theta$ a escolha do usuário, sendo que, quanto menor, mais preciso será o algorítimo.
 
 :animacao_matriz3
 
-No exemplo acima foi trasnferido apenas um ponto da imagem original para a matriz dos parâmetros, isto por que a quantidade de linhas e colunas são pequenas, o que seria incoveninete desenhar várias senóides.
+No exemplo acima foi trasnferido apenas um ponto da imagem original para a matriz dos parâmetros, isto por que a quantidade de linhas e colunas são pequenas, o que seria incoveninete desenhar várias senóides. Mas a lógica é a mesma das retas, num contexto prático a discretização será bem menor e haverá inúmeros mais pontos, e a medida com que as senóides vão se sobrepondo, é incrementado 1. Após aplicar a transformada para cada ponto na imagem, basta varrer a matriz ($\theta$, $\rho$) e filtrar as coordenadas que amarzenam os maiores valores. Essas coordenadas correspondem aos parâmetros das retas mais relevantes na imagem original.
 
-Mas a lógica é a mesma das retas, num contexto prático, haverá inúmeros mais pontos, e a medida com que as senóides vão se sobrepondo, é incrementado 1. Após aplicar a transformada para cada ponto na imagem, basta varrer a matriz ($\theta$, $\rho$) e filtrar as coordenadas que amarzenam os maiores valores. Essas coordenadas correspondem aos parâmetros das retas mais relevantes na imagem original.
+Entre [neste link](https://www.aber.ac.uk/~dcswww/Dept/Teaching/CourseNotes/current/CS34110/hough.html) para visualizar na prática como o algorítimo funciona. Repare que na esquerda é um campo para desenhar os pixels de controno e na direita é a matriz de acumulação.
 
 ## Complexidade
 

@@ -38,7 +38,7 @@ Uma possível solução seria detectar as linhas presentes nessas bordas. A part
 
 ## Compreendendo a ideia: o pulo do gato!
 
-Para compreender como detectar retas em uma imagem, é útil revisitar o seu conceito matemático. Uma reta pode ser representada pela equação $y=mx+c$, onde $y$ e $x$ representam as coordenadas de um ponto na reta, $m$ é o coeficiente angular (tangente do o angulo theta entre a reta e a horizontal) indicando o quão inclinada ela é, e $c$ é o coeficiente linear (indicando onde ela intercepta o eixo $y$).
+Para compreender como detectar retas em uma imagem, é útil revisitar o seu conceito matemático. Uma reta pode ser representada pela equação $y=mx+c$, onde $y$ e $x$ representam as coordenadas de um ponto na reta, $m$ é o coeficiente angular $\tan{(\theta)}$, e $c$ é o coeficiente linear (indicando onde ela intercepta o eixo $y$).
 
 ![](equacao1grau.png)
 
@@ -69,7 +69,7 @@ Infinitas retas passam por um ponto no plano cartesiano.
 
 
 ??? Checkpoint
-Escolha arbitrariamente, 3 retas que passam pelo ponto (2,1) e, com os parâmetros da respectiva reta (m,c), represente-a como um ponto no domínio da transformada.
+Escolha arbitrariamente, 3 retas que passam pelo ponto (2,1) e, com os parâmetros da respectiva reta ($m$, $c$), represente-a como um ponto no domínio da transformada.
 
 ![](graficos/ex2.png)
 
@@ -83,7 +83,7 @@ Escolha arbitrariamente, 3 retas que passam pelo ponto (2,1) e, com os parâmetr
 
 Agora represente as infinitas retas que passam pelo pontono (2,1) no domínio da transformada.
 
-**Dica:** há um padrão nos pontos (m,c) do gabarito anterior.
+**Dica:** há um padrão nos pontos ($m$, $c$) do gabarito anterior.
 
 ![](graficos/ex3.png)
 
@@ -147,7 +147,7 @@ No caso exemplo anterior, a reta amarela era a mais relevante para aquele conjun
 :::
 ???
 
-Esta é uma das grandes vantagens da Transformada de Hough, poder detectar todas as retas que ligam pontos na imagem original e filtrá-las pelo seu grau de relevância.
+Esta é uma das grandes vantagens da Transformada de Hough, poder detectar todas as retas que ligam pontos na imagem original e filtrá-las pelo seu grau de relevância, visto que, quanto mais pontos sobre a mesma reta, mais ela é evidente na imagem original.
 
 ## Compreendendo a ideia: o algorítmo
 
@@ -276,11 +276,17 @@ Mas a lógica é a mesma das retas, num contexto prático, haverá inúmeros mai
 
 ??? Checkpoint
 
-Levando o código montado anteriormente, tente analisar a complexidade do algorítmo. Pense em alto nível nesse primeiro momento, e depois tente analisar a complexidade de cada operação.
+O algoritmo da Transformada de Hough é aplicado a cada ponto do contorno da imagem. Esse processo inclui calcular o valor de $\rho$ para cada $\theta$ dentro do intervalo de $0$ a $\pi$, discretizado por $\Delta\theta$. O objetivo é determinar as coordenadas de uma função na transformada e adicioná-las à matriz de acumulação $A$.
+
+Determine a complexidade do algorítimo:
+
+![](animacao_complexidade/1.png)
 
 ::: Gabarito
 
-A complexidade do algorítmo é $O(n*m)$, onde $n$ é o número de pixels da imagem e $m$ é o número de $\theta$ iterados no segundo loop. Como temos 2 loops, um dentro do outro, a complexidade seria a multiplicação dos dois.
+:animacao_complexidade
+
+A complexidade do algorítmo é $O(n*m)$, onde $n$ é o número de pixels do contorno da imagem e $m$ é o número de $\theta$ iterados no segundo loop. Como temos 2 loops, um dentro do outro, a complexidade será o produto dos dois.
 
 :::
 

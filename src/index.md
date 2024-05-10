@@ -153,19 +153,37 @@ Esta é uma das grandes vantagens da Transformada de Hough, poder detectar todas
 
 Após entender a ideia matemática, você deve estar um pouco curioso em como essa lógica é implementada em um algorítimo.
 
-Ora, começemos do início, temos uma imagem com o contorno da imagem original, ou seja, uma matriz dos pixels, cada pixel possui uma coordenada ($x$, $y$), basta passa-lo para o domínio ($m$, $c$). Esse domínio pode ser representado por outra matriz, onde as linhas são representadas por $c$ e as colunas por $m$.
+Muitas vezes, os pontos de uma imagem não necessáriamente formam uma reta perfeita.
 
-<!-- ![](matriz.png) -->
+![](Matriz1.png)
+
+Dessa forma, ao passarmos estes pontos como retas no domínio ($m$, $c$), não há uma intersecção de todas as retas em um único ponto, que indica os valores ($m$, $c$) da reta na imagem.
+
+![](Matriz2.png)
 
 ??? Checkpoint
 
-Tendo em mente os conceitos da transformada ditos anteriormente, imagine como um ponto da imagem do contorno poderia ser representado na matriz dos parâmetros. Assuma que a matriz inicia com todos valores zerados e os pontos por onde passa uma reta se soma 1.
-
-![](graficos/1.png)
+Temos um problema, não conseguimos achar um ponto de intersecção das retas criadas pelos pontos na imagem. Tendo em mente os conceitos da transformada ditos anteriormente, como podemos contornar este problema para encontrar os valores adequados de ($m$, $c$)?
 
 ::: Gabarito
 
-![](animacao_matriz1/2.png)
+Podemos discretizar um espaço definindo um $\Delta m$ $\Delta c$, assim tendo uma tolerância de espaço, que conseguimos utilizar para aproximar o ponto mais adequado, de modo a criar basicamente uma reta de tendência no domínio original.
+
+:::
+
+???
+
+Afim de aplicar esse método em um algorítimo, utilizamos uma matriz. Ora, começemos do início, temos uma imagem com o contorno da imagem original, ou seja, uma matriz dos pixels, cada pixel possui uma coordenada ($x$, $y$), basta passa-lo para o domínio ($m$, $c$). Esse domínio pode ser representado por outra matriz, onde as linhas são representadas por $c$ e as colunas por $m$.
+
+??? Checkpoint
+
+Agora, imagine como um ponto da imagem do contorno poderia ser representado na matriz dos parâmetros. Assuma que a matriz inicia com todos valores zerados e os pontos por onde passa uma reta se soma 1.
+
+![](Matriz3.png)
+
+::: Gabarito
+
+![](Matriz4.png)
 
 Lembre-se, um ponto do domínio das coordendas é representado por uma reta no domínio dos parâmetros.
 
@@ -173,39 +191,11 @@ Lembre-se, um ponto do domínio das coordendas é representado por uma reta no d
 
 ???
 
-??? Checkpoint
+Com a aplicação desta matriz, as cordenadas com maior valor apresentam os valores de ($m$, $c$) que são provavelmente os mais adequados para a formação da reta na imagem original.
 
-O que você imagina que deve acontecer quando pontos alinhados na imagem original são transferidos para a matriz dos parâmetros? Simule como foi feito no gabarito do checkpoit anterior.
+![](Matriz5.png)
 
-**OBS**: Não se esqueça de incrementar em 1 os pontos por onde passa uma reta.
-
-::: Gabarito
-
-:animacao_matriz1
-
-De acordo com que os pontos da imagem são transferidos para a matriz dos parâmetros, os pontos onde há intersecção são incrementados.
-
-:::
-
-???
-
-??? Checkpoint
-
-Como vocẽ deduziria que a matriz dos parâmetros fosse ficar após a transformada dos pontos abaixo?
-
-![](pontos-tortos.png)
-
-::: Gabarito
-
-:animacao_matriz2
-
-Um ou mais indíces da matriz teriam valores maiores do que um. E como dito anteriormente, a coordenada onde há mais intersecções na transformada corresponde aos parâmetros da reta mais relevante no conjunto de pontos da imagem original.
-
-:::
-
-???
-
-Após aplicar a transformada para cada ponto na imagem, basta varrer a matriz ($m$, $c$) e selecionar as coordenadas que amarzenam os maiores valores. Essas coordenadas correspondem aos parâmetros das retas mais relevantes na imagem original.
+<!-- ![](matriz.png) -->
 
 ## Problema prático dos parâmetros ($m$, $c$)
 

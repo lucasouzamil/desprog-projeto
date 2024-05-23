@@ -38,19 +38,47 @@ Uma possível solução seria detectar as linhas presentes nessas bordas. A part
 
 ## Compreendendo a ideia: o pulo do gato!
 
-Para compreender como detectar retas em uma imagem, é útil revisitar o seu conceito matemático. Uma reta pode ser representada pela equação $y=mx+c$, onde $y$ e $x$ representam as coordenadas de um ponto na reta, $m$ é o coeficiente angular $\tan{(\theta)}$, e $c$ é o coeficiente linear (indicando onde ela intercepta o eixo $y$).
+Para compreender como detectar retas em uma imagem, é útil revisitar o seu conceito matemático. Uma reta pode ser representada pela equação $y=mx+c$, onde $y$ e $x$ representam as coordenadas de um ponto na reta, $m$ é o coeficiente angular $\tan{(\alpha)}$, e $c$ é o coeficiente linear (indicando onde ela intercepta o eixo $y$).
 
 ![](equacao1grau.png)
 
 Essa equação nos capacita a descrever qualquer reta (ou quase todas) em um plano cartesiano, o que se revela especialmente útil em imagens, já que uma imagem digital geralmente é representada por uma matriz, ou seja, um plano cartesiano, no qual cada pixel (ponto) possui coordenadas $x$ e $y$.
+
+
+??? Checkpoint
+Ter o conceito de retas e como representa-las em um plano cartesiano é especialmente útil na Transformada de Hough. Represente uma reta no plano cartesiano cujo os parâmetros $m$ e $c$ são 2 e -1, respectivamente.
+
+![](planocartesiano.png)
+
+::: Gabarito
+
+
+![](planocartesianoresposta.png)
+
+:::
+???
+
+??? Checkpoint
+
+Agora faça o inverso, tendo a reta a abaixo, determine os parâmetros $m$ e $c$.
+
+![](planocartesianopergunta.png)
+
+::: Gabarito
+
+$m=-0.75$
+
+$c=2$ 
+ 
+:::
+???
+
 
 Tá mas, por que isso é últil na Transformada de Hough? E antes disso, no que consiste uma transformada?
 
 Uma transformada basicamente consiste em passar uma função matemática de um domínio para outro. De maneira mais simplória, **uma transformada é um jeito de olhar para as coisas de uma nova perspectiva**. Imagine que você tem uma função (como uma equação matemática) que descreve algo em um espaço, como pontos em uma imagem. Agora, aplicar uma transformada significa pegar essa função e mudar a forma como a representamos, levando-a para um novo espaço. Isso nos permite ver coisas que talvez não fossem óbvias na forma original.
 
 A transformada de Hough faz exatamente isso! Mas com um objetivo específico: **encontrar padrões lineares em uma imagem**, como formas geométricas (no nosso caso, retas). Em vez de olhar diretamente para os pixels da imagem, a transformada de Hough mapeia esses pixels para um espaço de parâmetros, passando de $y=mx+c$ para $c=-mx+y$, onde podemos identificar padrões lineares mais facilmente.
-
-
 
 
 ??? Checkpoint
@@ -65,11 +93,11 @@ Infinitas retas passam por um ponto no plano cartesiano.
 :::
 ???
 
-
+Agora que relembramos que infitas retas passam por um ponto no plano cartesiano, vamos tentar representar elas em um novo espaço, que seja mais fácil identificar padrões e recorrências entre retas de uma imagem. A ideia do Espaço de Hough é utilizar um plano cartesiano com os parâmetros $m$ e $c$, os quais são as abissas e ordenadas, respectivamente. Para fazer essa passagem utilizamos a equação parametrizada $c=-mx+y$ citada anteriormente.
 
 
 ??? Checkpoint
-Escolha arbitrariamente, 3 retas que passam pelo ponto (2,1) e, com os parâmetros da respectiva reta ($m$, $c$), represente-a como um ponto no domínio da transformada.
+Escolha arbitrariamente, 3 retas que passam pelo ponto (2,1) e, com os parâmetros da respectiva reta ($m$, $c$), represente-a como um ponto no novo espaço.
 
 ![](graficos/ex2.png)
 
@@ -95,7 +123,15 @@ Agora represente as infinitas retas que passam pelo pontono (2,1) no domínio da
 :::
 ???
 
-Okay, espero que tenha ficado claro o que um representa no outro e vice-versa, mas onde identificamos os padrões que a transformada promete?
+Okay, vamos fazer um pequeno checkup do que pode ser percebido nas atividades anteriores:
+
+1. Infinitas retas passam por um ponto no plano cartesiano.
+
+2. Cada reta que passa por um ponto do domínio original, pode ser representada como um ponto no domínio da transformada.
+
+3. Uma reta no domínio da transformada representa as infitas retas que passam pelo respectivo ponto no domínio original.
+
+Mas onde identificamos os padrões?
 
 ??? Checkpoint
 
@@ -109,34 +145,39 @@ Represente os dois pontos do gráfico abaixo no domínio da trasformada.
 
 :animacao_2pontos_1
 
-As retas se cruzam, mas afinal, o que isso significa?
-
 :::
 ???
 
 ??? Checkpoint
 
-Encontre o respecitvo ponto ($m$, $c$) em que as retas no domínio da transformada se cruzam e utilize esses parâmetros para desenhar uma reta na imagem original. Interprete o resultado obtido.
+Encontre o respecitvo ponto ($m$, $c$) em que as retas no domínio da transformada se cruzam e utilize esses parâmetros para desenhar uma reta na imagem original. Qual o significado desses parâmetros?
 
 ::: Gabarito
 
 :animacao_2pontos_2
 
-Quando passamos um ponto da imagem para o novo domínio, essa reta representa infinitas retas que passam pelo respectivo ponto na imagem original. 
-Quando duas retas no domínio dos parâmetros se cruzam, isso significa que os dois pontos correspondentes na imagem original estão conectados por uma reta com os parâmetros $m$ e $c$, os quais são a coordenada da interesecção no gráfico da transformada.
+Esses parâmetros representam a reta que liga os dois pontos na imagem original.
+
 
 :::
 ???
+
+Calma, vamos repirar e refletir o que aconteceu...
+
+Quando passamos um ponto da imagem para o novo domínio, essa reta representa infinitas retas que passam pelo respectivo ponto na imagem original. 
+Quando duas retas no domínio dos parâmetros se cruzam, isso significa que os dois pontos correspondentes na imagem original estão conectados por uma reta com os parâmetros $m$ e $c$, os quais são a coordenada da interesecção no gráfico da transformada.
 
 Okay, você encontrou uma reta que liga dois pontos, mas em uma imagem real há inúmeros, muitos deles (na verdade a maioria) desalinhados, o que significa que há inúmeras retas ligando pontos em uma imagem real, e aqui surge outro problema, como determinamos as retas mais relevantes de uma imagem utilizando a transformada?
 
 ??? Checkpoint
 
-O carrossel abaixo mostra a transformada de um conjunto de pontos.
+O carrossel abaixo mostra a Transformada de Hough em um conjunto de pontos.
 
 :animacao_t_retas_deslocado
 
-Interpete a transformada dos pontos acima, e, utilizando o gráfico do novo domínio, justifique qual é a reta mais relevante para o conjunto.
+Utilizando o gráfico do novo domínio, justifique qual é a reta mais relevante para o conjunto.
+
+**OBS:** Considere a reta mais relevante, aquela mais recorrente entre os pixels da imagem original.
 
 
 ::: Gabarito
@@ -199,7 +240,20 @@ Com a aplicação desta matriz, as cordenadas com maior valor apresentam os valo
 
 ## Problema prático dos parâmetros ($m$, $c$)
 
-A implementação mencionada parece correta em teoria, mas pode enfrentar dificuldades na prática. Isso se deve ao uso de parametrização com os parâmetros $m$ e $c$, que pode não lidar adequadamente com retas verticais. Isso ocorre porque **essa parametrização não permite a descrição de retas verticais**, onde o ângulo com a horizontal é 90°. Assim, essa abordagem não é a mais adequada em aplicações práticas.
+A implementação mencionada parece correta em teoria, mas pode enfrentar dificuldades na prática. Isso se deve ao uso de parametrização com os parâmetros $m$ e $c$. 
+
+??? Checkpoint
+
+Considerando a parametrização $c=-mx+y$, existe algum tipo de reta que ela não pode representar?
+
+**Dica:** relembre que $m$ é $\tan{(\alpha)}$ e que a tangente de $\alpha$ não é definida para alguns valores de $\alpha$.
+
+::: Gabarito
+
+Esta parametrização pode não lidar adequadamente com retas verticais. Isso ocorre porque **ela não permite a descrição de retas onde o ângulo com a horizontal é 90°**. Assim, essa abordagem não é a mais adequada em aplicações práticas, pois em uma imagem podemos ter um pixel exatamente na mesma coluna que o outro.
+
+:::
+???
 
 
 ## Uma possível solução: a mágica da parametrização polar
@@ -220,27 +274,13 @@ Antes de prosseguir, entre [neste link](https://www.geogebra.org/m/xzkd8ffg) do 
 
 Certo, mas como funciona usando essa parametrização? Ora, da mesma maneira que na primeira parametrização, mas ao invés de passarmos os pontos de uma imagem para o domínio ($m$, $c$), passaremos para o domínio ($θ$, $ρ$). Ou seja, de $y=mx+c$ para $\rho =-x\sin(\theta) + y\cos(\theta)$.
 
-??? Checkpoint
+Assim como foi feito na primeira parametrização, a representação de um ponto da imagem no novo domínio ($θ$, $ρ$) é feita usando suas cooredeanadas $x$ e $y$ como constantes. Explore mais neste [exemplo do GeoGebra](https://www.geogebra.org/m/zc4akab8). 
 
-Como foi  feito na primeira transformada, tente imaginar como seria a representação de um ponto da imagem no novo domínio ($θ$, $ρ$), usando suas cooredeanadas $x$ e $y$ como constantes. Se possível pegue um papel e uma caneta e desenhe um gráfico.
-
-![](exemplo_senoides/1.png)
-
-::: Gabarito
-
-![](exemplo_senoides/2.png)
-
-Um ponto do domínio das coordendas é representado por uma senóide no domínio dos novos parâmetros!
-
-Essa senóide representa o universo das infinitas retas que passam pelo respectivo ponto na imagem original.
-
-:::
-???
-
+:exemplo_senoides1
 
 ??? Checkpoint
 
-De acordo com que transportamos os pontos da imagem para o novo domínio, as senóides podem se cruzar. O que isso significa?
+Conforme transportamos os pontos da imagem para o novo domínio, as senóides podem se cruzar. O que isso significa? Procure entender melhor neste [exemplo do GeoGebra](https://www.geogebra.org/m/uv9dkkar) como auxílio.
 
 ![](exemplo_senoides/3.png)
 
@@ -282,7 +322,3 @@ A complexidade do algorítmo é $O(n*m)$, onde $n$ é o número de pixels do con
 :::
 
 ???
-
-## Exercícios
-
-PROXIMA ENTREGA
